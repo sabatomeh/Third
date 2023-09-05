@@ -6,7 +6,7 @@ class fooditem {
   final String estimatedTime;
   final int numberOfSales;
   final String category;
-  final bool isFavorite;
+   bool isFavorite;
 
   fooditem({
     required this.id,

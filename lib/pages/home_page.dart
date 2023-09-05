@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_del/models/category_item.dart';
 import 'package:food_del/models/food_item.dart';
 import 'package:food_del/pages/favorite_page.dart';
+import 'package:food_del/pages/products_details_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int? selectedCategoryIndex;
   late List<fooditem> filteredFood;
-
+  
   @override
   void initState() {
     super.initState();
@@ -185,73 +186,81 @@ class _HomePageState extends State<HomePage> {
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: filteredFood.length,
-              itemBuilder: (context, index) => Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Stack(
-                    alignment: AlignmentDirectional.center,
-                    children: [
-                      Column(
-                        children: [
-                          Image.network(
-                            filteredFood[index].imgUrl,
-                            height: 100,
-                          ),
-                          Text(
-                            filteredFood[index].name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+              itemBuilder: (context, index) => InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProductsDetailsPage(
+                            food: filteredFood[index],
+                          )));
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.center,
+                      children: [
+                        Column(
+                          children: [
+                            Image.network(
+                              filteredFood[index].imgUrl,
+                              height: 100,
                             ),
-                          ),
-                          Text(filteredFood[index].category,
+                            Text(
+                              filteredFood[index].name,
                               style: const TextStyle(
-                                color: Colors.grey,
-                              )),
-                          const SizedBox(
-                            height: 4.0,
-                          ),
-                          Text('\$ ${filteredFood[index].price}',
-                              style: const TextStyle(
-                                color: Colors.deepOrange,
-                                fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                              )),
-                        ],
-                      ),
-                      PositionedDirectional(
-                        top: 0,
-                        end: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                filteredFood[index] = filteredFood[index]
-                                    .copyWith(
-                                        isFavorite:
-                                            !filteredFood[index].isFavorite);
-                                final selectedFoodItem = food.firstWhere(
-                                    (item) =>
-                                        item.id == filteredFood[index].id);
-                                final selectedFoodItemIndex =
-                                    food.indexOf(selectedFoodItem);
-                                food[selectedFoodItemIndex] =
-                                    filteredFood[index];
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(filteredFood[index].category,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                )),
+                            const SizedBox(
+                              height: 4.0,
+                            ),
+                            Text('\$ ${filteredFood[index].price}',
+                                style: const TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                )),
+                          ],
+                        ),
+                        PositionedDirectional(
+                          top: 0,
+                          end: 0,
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  filteredFood[index] = filteredFood[index]
+                                      .copyWith(
+                                          isFavorite:
+                                              !filteredFood[index].isFavorite);
+                                  final selectedFoodItem = food.firstWhere(
+                                      (item) =>
+                                          item.id == filteredFood[index].id);
+                                  final selectedFoodItemIndex =
+                                      food.indexOf(selectedFoodItem);
+                                  food[selectedFoodItemIndex] =
+                                      filteredFood[index];
 
-                                if (filteredFood[index].isFavorite) {
-                                  favoritesPage f = favoritesPage();
-                                  f.l1.add(filteredFood[index]);
-                                }
-                              });
-                            },
-                            icon: Icon(filteredFood[index].isFavorite == false
-                                ? Icons.favorite_border
-                                : Icons.favorite),
-                            color: Colors.deepOrange),
-                      ),
-                    ],
-                  )),
+                                  if (filteredFood[index].isFavorite) {
+                                    favoritesPage f = favoritesPage();
+                                    f.l1.add(filteredFood[index]);
+                                  }
+                                });
+                              },
+                              icon: Icon(filteredFood[index].isFavorite == false 
+                                  ? Icons.favorite_border
+                                  : Icons.favorite),
+                              color: Colors.deepOrange),
+                        ),
+                      ],
+                    )),
+              ),
             ),
           ],
         ),
